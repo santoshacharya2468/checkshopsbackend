@@ -13,7 +13,7 @@ mongoose.connect(process.env.dbCon, {
     useNewUrlParser: true,
     useCreateIndex:true,
 });
-app.listen(process.env.port, () => console.log(`Server running on port ..${process.env.port}`));
+app.listen(process.env.port,"192.168.1.153",() => console.log(`Server running on port ..${process.env.port}`));
 app.use(express.json());
 app.use(appMiddleware);
 //routes
