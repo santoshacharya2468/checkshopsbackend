@@ -18,4 +18,6 @@ app.use(express.json());
 app.use(appMiddleware);
 //routes
 const accountRoute=require("./routes/accountRoute");
+const shopRoute=require("./routes/shopRoute");
 app.use("/account",accountRoute);
+app.use("/shop",shopRoute);

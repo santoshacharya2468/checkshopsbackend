@@ -24,20 +24,20 @@ const storage=multer.diskStorage({
     }
 });
 const upload=multer({storage:storage});
-router.get("/",async(req,res)=>{
-    try{
-        const products= await Product.find();
-        res.json(products);
-    }
-    catch(e){
-        res.status(500).send({message:"Error retrieving products"});
-    }
+// router.get("/",async(req,res)=>{
+//     try{
+//         const products= await Product.find();
+//         res.json(products);
+//     }
+//     catch(e){
+//         res.status(500).send({message:"Error retrieving products"});
+//     }
 
-});
-router.get("/:catId",async(req,res)=>{
-    let catId=req.params.catId;
+// });
+router.get("/:shopId",async(req,res)=>{
+    let shopId=req.params.shopId;
     try{
-        const products= await Product.find({category:catId});
+        const products= await Product.find({shop:shopId});
         res.json(products);
     }
     catch(e){

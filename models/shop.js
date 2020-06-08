@@ -6,6 +6,11 @@ const shopSchema=mongoose.Schema({
         required:true,
         unique:true,
     },
+    registeredAt:{
+        type:Date,
+        default:Date.now
+
+    },
     businessName:{
         type:String,
         required:true,
