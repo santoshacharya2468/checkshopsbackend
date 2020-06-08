@@ -8,7 +8,7 @@ const authorization = async function (req, res, next) {
     else {
        
         try {
-            var result = jsonwebtoken.verify(jwtkey, process.env.hashKey);
+            var result = jsonwebtoken.verify(jwtkey, "53465FDSFf##%#%$%");
             req.user = result;
             return next();
         }
