@@ -15,19 +15,22 @@ const shopSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+
   businessLogo: {
     type: String,
     required: true,
   },
-  address: {
-    type: Object,
-    required: true,
-  },
+  address: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   district: {
     type: String,
     required: true,
   },
-  email: {
+  businessEmail: {
     type: String,
     required: true,
   },
@@ -35,14 +38,22 @@ const shopSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  mobile: {
+  facebook: {
     type: String,
     required: true,
   },
-  telephone: {
-    type: String,
-    required: true,
-  },
+  mobiles: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  telephones: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   packageDuration: {
     duration: {
       //like 3 months 6 months and 1 year
@@ -59,10 +70,13 @@ const shopSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  categories: [
+  category: {
+    type: mongoose.Types.ObjectId,
+    ref: "Category",
+  },
+  subCategories: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: "Category",
+      type: String,
     },
   ],
 });
