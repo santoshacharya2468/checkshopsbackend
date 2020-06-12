@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 var morgan = require('morgan');
 const path=require("path");
 
@@ -8,7 +8,7 @@ const path=require("path");
 const appMiddleware=require("./middlewares/appmiddleware");
 //models
 const User=require("./models/user");
-dotenv.config();
+// dotenv.config();
 const app = express();
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
@@ -19,7 +19,7 @@ mongoose.connect(process.env.dbCon, {
 });
 app.use(morgan('tiny'));
 
-app.listen(process.env.port,"192.168.1.153",() => console.log(`Server running on port ..${process.env.port}`));
+app.listen(process.env.port,() => console.log(`Server running on port ..${process.env.port}`));
 
 app.use(express.json());
 
