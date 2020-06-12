@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+var morgan = require("morgan");
+
 //middleware
 //const appMiddleware=require("./middlewares/appmiddleware");
 //models
@@ -13,6 +15,7 @@ mongoose.connect(process.env.dbCon, {
   useNewUrlParser: true,
   useCreateIndex: true,
 });
+app.use(tiny(morgan));
 app.listen(process.env.port, "192.168.100.101", () =>
   console.log(`Server running on port ..${process.env.port}`)
 );
