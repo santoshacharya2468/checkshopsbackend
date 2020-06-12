@@ -20,15 +20,17 @@ const shopSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    address:{
-        type:Object,
-        required:true
-    },
+    address:[
+    {
+        type:String,
+        required:true,
+    }
+    ],
     district:{
         type:String,
         required:true,
     },
-    email:{
+    businessEmail:{
         type:String,
         required:true,
     },
@@ -36,14 +38,18 @@ const shopSchema=mongoose.Schema({
         type:String,
         required:true,
     },
-    mobile:{
+     facebook:{
         type:String,
         required:true,
     },
-    telephone:{
+    mobiles:[{
         type:String,
         required:true,
-    },
+    }],
+    telephones:[{
+        type:String,
+        required:true,
+    }],
     packageDuration:{
             duration:{
                 //like 3 months 6 months and 1 year
@@ -60,11 +66,15 @@ const shopSchema=mongoose.Schema({
         type:Boolean,
         default:false
     },
-    categories:[
+    category:
         {
             type:mongoose.Types.ObjectId,
             ref:"Category",
+        },
+        subCategories:[
+        {
+            type:String,
         }
-    ]
-});
+        ]
+    });
 module.exports=mongoose.model("Shop",shopSchema);

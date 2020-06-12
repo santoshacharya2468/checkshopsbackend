@@ -1,4 +1,4 @@
-const mongoose = require("express");
+const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 var path = require('path');
@@ -11,7 +11,7 @@ const storage=multer.diskStorage({
     },
     filename:(req,file,cb)=>{
         let filename=Date.now()+"_"+file.originalname;
-            req.upload=filename;
+            req.upload="/public/categories/"+filename;
             cb(null,filename);
     }
 });
@@ -26,12 +26,12 @@ router.get("/",async(req,res)=>{
        res.status(500).send({message:"Error retrieving categories"});
     }
 });
-router.post("/",authorization,upload.single("photo"),async(req,res)=>{
+router.post("/",authorization,upload.single("icon"),async(req,res)=>{
     let alreadcategory= await Category.findOne({name:req.body.name});
     if(alreadcategory==null){
     let category=new Category({
         name:req.body.name,
-        photo:req.upload,
+        icon:req.upload,
     });
     try{
         var result=await category.save();
