@@ -16,6 +16,8 @@ const storage=multer.diskStorage({
 });
 const upload=multer({storage:storage});
 const Deal=require("../models/deal");
+//to get all deals;
+//should use pagination;
 router.get("/",async(req,res)=>{
     try{
         const deals= await Deal.find();
@@ -25,6 +27,17 @@ router.get("/",async(req,res)=>{
        res.status(500).send({message:"Error retrieving deals"});
     }
 });
+//get deals based upon the category;
+router.get("/:catId",async(req,res)=>{
+    try{
+        const deals= await Deal.find();
+        res.json(deals);
+    }
+    catch(e){
+       res.status(500).send({message:"Error retrieving deals"});
+    }
+});
+//to create a new deal;
 router.post("/",authorization,upload.single("bannerImage"),async(req,res)=>{
     req.body.bannerImage=req.upload;
     let deal=new Deal(

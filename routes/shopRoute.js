@@ -30,15 +30,17 @@ router.get("/", async (req, res) => {
     res.status(500).send({ message: "server error" });
   }
 });
-// route.get("/:id",async(req,res)=>{
-//   try {
-//     var shop = await Shop.findById(req.params.id)
-//     res.status(200).json(shop);
-//   } catch (error) {
-//     res.status(404).json({message:"Not found"});
-//   }
-// })
-
+router.get("/search/:query", async (req, res) => {
+  //this route should be paginated
+  try {
+    var shops = await Shop.find({
+      businessName: { $regex: req.params.query, $options: "i" },
+    }).populate("category");
+    res.json(shops);
+  } catch (e) {
+    res.status(500).send({ message: "server error" + e });
+  }
+});
 //add new shops
 router.post("/", upload.single("logo"), async (req, res) => {
   var { email, password } = req.body;
