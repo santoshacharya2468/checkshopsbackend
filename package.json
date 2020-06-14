@@ -4,12 +4,8 @@
   "description": "beckdend for checkshopsonline",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
-=======
-    "start": "node index.js"
->>>>>>> 95dac71225b5dccf19a08c681eb56a328fda31cd
+
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "santoshacharya2468@gmail.com",
   "license": "ISC",

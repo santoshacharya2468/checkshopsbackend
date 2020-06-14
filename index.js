@@ -19,7 +19,7 @@ mongoose.connect(process.env.dbCon, {
 });
 app.use(morgan("tiny"));
 
-app.listen(process.env.port, "192.168.100.101", () =>
+app.listen(process.env.PORT, () =>
   console.log(`Server running on port ..${process.env.port}`)
 );
 
