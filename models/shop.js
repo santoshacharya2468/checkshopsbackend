@@ -79,5 +79,8 @@ const shopSchema = mongoose.Schema({
       type: String,
     },
   ],
+  shopDescription: {
+    type: String,
+  },
 });
 module.exports = mongoose.model("Shop", shopSchema);

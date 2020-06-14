@@ -30,6 +30,15 @@ router.get("/", async (req, res) => {
     res.status(500).send({ message: "server error" });
   }
 });
+// route.get("/:id",async(req,res)=>{
+//   try {
+//     var shop = await Shop.findById(req.params.id)
+//     res.status(200).json(shop);
+//   } catch (error) {
+//     res.status(404).json({message:"Not found"});
+//   }
+// })
+
 //add new shops
 router.post("/", upload.single("logo"), async (req, res) => {
   var { email, password } = req.body;
@@ -43,7 +52,7 @@ router.post("/", upload.single("logo"), async (req, res) => {
           let user = new User({ email: email, password: hashPassword });
           let result = await user.save();
           //from here start with shop registeration
-          req.body.owner = result;
+          req.body.req.body.owner = result;
           req.body.activated = false;
           req.body.businessLogo = req.logo;
           req.body.packageDuration = {
@@ -88,4 +97,31 @@ router.post("/", upload.single("logo"), async (req, res) => {
     res.status(400).send(e);
   }
 });
+
+router.get("/myshop", authorization, async (req, res) => {
+  try {
+    var user = await User.findOne({ email: req.user.email }).select("+_id");
+    var shop = await Shop.findOne({ owner: user.id });
+    res.status(200).json({ shopDescription: shop.shopDescription });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+router.put("/myshop/update", authorization, async (req, res) => {
+  try {
+    var user = await User.findOne({ email: req.user.email }).select("+_id");
+    var shop = await Shop.findOneAndUpdate(
+      { owner: user.id },
+      { $set: { shopDescription: req.body.shopDescription } }
+    );
+    if (!shop) {
+      res.status(404).send({ message: "Internal Error" });
+    }
+    res.status(200).send({});
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 module.exports = router;
