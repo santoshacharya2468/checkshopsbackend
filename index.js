@@ -5,7 +5,7 @@ var morgan = require("morgan");
 const path = require("path");
 
 //middleware
-//const appMiddleware=require("./middlewares/appmiddleware");
+const appMiddleware=require("./middlewares/appmiddleware");
 //models
 const User = require("./models/user");
 // dotenv.config();
