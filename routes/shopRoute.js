@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 //route to get all shops available in the database
 router.get("/", async (req, res) => {
+
   //this route should be paginated
   try {
     var shops = await Shop.find().populate("category").sort({ _id: -1 });
