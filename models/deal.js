@@ -3,6 +3,7 @@ const dealSchema=mongoose.Schema({
     shop:{
         type:mongoose.Types.ObjectId,
         ref:"Shop",
+        required:true,
     },
     mediaUrl:{
         type:String,
