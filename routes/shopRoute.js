@@ -50,7 +50,7 @@ router.get("/:catId", async (req, res) => {
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ _id: -1 });
-    if ((await Shop.count({ categoy: req.params.catId })) > perPage * page) {
+    if ((await Shop.count({ category: req.params.catId })) > perPage * page) {
       var nextPage = Number(page) + 1;
     } else {
       nextPage = null;
