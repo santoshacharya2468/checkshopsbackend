@@ -87,7 +87,7 @@ router.post("/", upload.single("logo"), async (req, res) => {
           let user = new User({ email: email, password: hashPassword });
           let result = await user.save();
           //from here start with shop registeration
-          req.body.req.body.owner = result;
+          req.body.owner = result;
           req.body.activated = false;
           req.body.businessLogo = req.logo;
           req.body.packageDuration = {

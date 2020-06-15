@@ -83,5 +83,4 @@ const shopSchema = mongoose.Schema({
     type: String,
   },
 });
-shopSchema.index({ businessName: 'text'});
 module.exports = mongoose.model("Shop", shopSchema);
