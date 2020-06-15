@@ -104,9 +104,9 @@ router.get("/myshop", authorization, async (req, res) => {
   try {
     var user = await User.findOne({ email: req.user.email }).select("+_id");
     var shop = await Shop.findOne({ owner: user.id });
-    res.status(200).json({ shopDescription: shop.shopDescription });
+    res.status(200).json(shop);
   } catch (error) {
-    console.log(error.message);
+    res.status(401).json({ message: error.message });
   }
 });
 
@@ -122,7 +122,7 @@ router.put("/myshop/update", authorization, async (req, res) => {
     }
     res.status(200).send({});
   } catch (error) {
-    console.log(error.message);
+    res.status(401).send({ message: error.message });
   }
 });
 
