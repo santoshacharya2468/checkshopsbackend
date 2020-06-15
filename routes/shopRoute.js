@@ -84,16 +84,7 @@ router.get("/:catId/:district", async (req, res) => {
 
 
 
-router.get("/search/:query", async (req, res) => {
-  //this route should be paginated
-  try {
-    var shops = await Shop.find({businessName: { $regex: req.params.query, $options: "i" },})
-    
-    res.json(shops);
-  } catch (e) {
-    res.status(500).send({ message: "server error" + e });
-  }
-});
+
 //add new shops
 router.post("/", upload.single("logo"), async (req, res) => {
   var { email, password } = req.body;
