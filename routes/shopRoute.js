@@ -41,6 +41,16 @@ router.get("/", async (req, res) => {
     res.status(500).send({ message: "server error" + e });
   }
 });
+router.get("/myshop", authorization, async (req, res) => {
+  try {
+    var user = await User.findOne({ email: req.user.email })
+    .select("+_id");
+    var shop = await Shop.findOne({ owner: user.id }).populate("category");
+    res.status(200).json(shop);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 router.get("/:catId", async (req, res) => {
   let page = req.query.page || 1;
   //this route should be paginated
@@ -62,15 +72,21 @@ router.get("/:catId", async (req, res) => {
 });
 router.get("/:catId/:district", async (req, res) => {
   let page = req.query.page || 1;
-  let district=req.params.district;
+  let district = req.params.district;
   //this route should be paginated
   try {
-    var shops = await Shop.find({ category: req.params.catId,district:district })
+    var shops = await Shop.find({
+      category: req.params.catId,
+      district: district,
+    })
       .populate("category")
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ _id: -1 });
-    if ((await Shop.count({ category: req.params.catId,district:district })) > perPage * page) {
+    if (
+      (await Shop.count({ category: req.params.catId, district: district })) >
+      perPage * page
+    ) {
       var nextPage = Number(page) + 1;
     } else {
       nextPage = null;
@@ -80,10 +96,6 @@ router.get("/:catId/:district", async (req, res) => {
     res.status(500).send({ message: "server error" + e });
   }
 });
-
-
-
-
 
 //add new shops
 router.post("/", upload.single("logo"), async (req, res) => {
@@ -141,16 +153,6 @@ router.post("/", upload.single("logo"), async (req, res) => {
     console.log(req.logo);
     fs.unlinkSync(appDir + "/public/shops/" + req.logo);
     res.status(400).send(e);
-  }
-});
-
-router.get("/myshop", authorization, async (req, res) => {
-  try {
-    var user = await User.findOne({ email: req.user.email }).select("+_id");
-    var shop = await Shop.findOne({ owner: user.id });
-    res.status(200).json(shop);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
   }
 });
 
