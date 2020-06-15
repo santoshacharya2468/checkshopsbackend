@@ -89,9 +89,9 @@ router.get("/search/:query", async (req, res) => {
   try {
     var shops = await Shop.find({
       businessName: { $regex: req.params.query, $options: "i" },
-    })
-      .populate("category")
-      .limit(20);
+    }) .limit(20)
+      .populate("category");
+     
     res.json(shops);
   } catch (e) {
     res.status(500).send({ message: "server error" + e });
