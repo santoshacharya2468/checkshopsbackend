@@ -5,6 +5,7 @@ const multer = require("multer");
 var path = require("path");
 const User = require("../models/user");
 var fs = require("fs");
+const perPage=3;
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
@@ -22,12 +23,44 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 //route to get all shops available in the database
 router.get("/", async (req, res) => {
+  let page=req.query.page ||1;
   //this route should be paginated
   try {
-    var shops = await Shop.find().populate("category").sort({ _id: -1 });
-    res.json(shops);
+    var shops = await Shop.find()
+    .populate("category")
+    .skip((page-1)*perPage)
+    .limit(perPage)
+    .sort({ _id: -1 });
+    if(await Shop.count()>perPage*page){
+     var nextPage=Number(page)+1;
+    }
+    else{
+      nextPage=null;
+    }
+    res.json({data:shops,perPage:perPage,next:nextPage});
   } catch (e) {
-    res.status(500).send({ message: "server error" });
+    res.status(500).send({ message: "server error" +e});
+  }
+});
+router.get("/:catId", async (req, res) => {
+  
+  let page=req.query.page ||1;
+  //this route should be paginated
+  try {
+    var shops = await Shop.find({category:req.params.catId})
+    .populate("category")
+    .skip((page-1)*perPage)
+    .limit(perPage)
+    .sort({ _id: -1 });
+    if(await Shop.count({categoy:req.params.catId})>perPage*page){
+     var nextPage=Number(page)+1;
+    }
+    else{
+      nextPage=null;
+    }
+    res.json({data:shops,perPage:perPage,next:nextPage});
+  } catch (e) {
+    res.status(500).send({ message: "server error" +e});
   }
 });
 router.get("/search/:query", async (req, res) => {
@@ -35,7 +68,7 @@ router.get("/search/:query", async (req, res) => {
   try {
     var shops = await Shop.find({
       businessName: { $regex: req.params.query, $options: "i" },
-    }).populate("category");
+    }).populate("category").limit(20);
     res.json(shops);
   } catch (e) {
     res.status(500).send({ message: "server error" + e });
