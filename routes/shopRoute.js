@@ -88,7 +88,7 @@ router.get("/search/:query", async (req, res) => {
   //this route should be paginated
   try {
     var shops = await Shop.find({businessName: { $regex: req.params.query, $options: "i" },})
-     .populate("category")
+    
     res.json(shops);
   } catch (e) {
     res.status(500).send({ message: "server error" + e });
