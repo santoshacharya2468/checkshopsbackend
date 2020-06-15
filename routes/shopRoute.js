@@ -50,7 +50,7 @@ router.get("/:catId", async (req, res) => {
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ _id: -1 });
-    if ((await Shop.count({ categoy: req.params.catId })) > perPage * page) {
+    if ((await Shop.count({ category: req.params.catId })) > perPage * page) {
       var nextPage = Number(page) + 1;
     } else {
       nextPage = null;
@@ -60,19 +60,31 @@ router.get("/:catId", async (req, res) => {
     res.status(500).send({ message: "server error" + e });
   }
 });
-router.get("/search/:query", async (req, res) => {
+router.get("/:catId/:district", async (req, res) => {
+  let page = req.query.page || 1;
+  let district=req.params.district;
   //this route should be paginated
   try {
-    var shops = await Shop.find({
-      businessName: { $regex: req.params.query, $options: "i" },
-    })
+    var shops = await Shop.find({ category: req.params.catId,district:district })
       .populate("category")
-      .limit(20);
-    res.json(shops);
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .sort({ _id: -1 });
+    if ((await Shop.count({ category: req.params.catId,district:district })) > perPage * page) {
+      var nextPage = Number(page) + 1;
+    } else {
+      nextPage = null;
+    }
+    res.json({ data: shops, perPage: perPage, next: nextPage });
   } catch (e) {
     res.status(500).send({ message: "server error" + e });
   }
 });
+
+
+
+
+
 //add new shops
 router.post("/", upload.single("logo"), async (req, res) => {
   var { email, password } = req.body;
@@ -86,7 +98,7 @@ router.post("/", upload.single("logo"), async (req, res) => {
           let user = new User({ email: email, password: hashPassword });
           let result = await user.save();
           //from here start with shop registeration
-          req.body.req.body.owner = result;
+          req.body.owner = result;
           req.body.activated = false;
           req.body.businessLogo = req.logo;
           req.body.packageDuration = {
