@@ -19,7 +19,7 @@ mongoose.connect(process.env.dbCon, {
 });
 app.use(morgan("tiny"));
 
-app.listen(process.env.PORT||8080, () =>
+app.listen(process.env.PORT || 8080, () =>
   console.log(`Server running on port ..${process.env.PORT}`)
 );
 
@@ -37,9 +37,11 @@ app.use("/deal", appMiddleware, dealRoute);
 app.get("/search/:query", async (req, res) => {
   //this route should be paginated
   try {
-    var shops = await Shop.find({businessName: { $regex: req.params.query, $options: "i" },})
-     .populate("category")
-     .limit(20);
+    var shops = await Shop.find({
+      businessName: { $regex: req.params.query, $options: "i" },
+    })
+      .populate("category")
+      .limit(20);
     res.json(shops);
   } catch (e) {
     res.status(500).send({ message: "server error" + e });
