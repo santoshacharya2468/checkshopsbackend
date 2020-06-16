@@ -28,6 +28,15 @@ router.get("/:shopId",async(req,res)=>{
        res.status(500).send({message:"Error retrieving workgallery"});
     }
 });
+router.get("/",authorization,hasShop,async(req,res)=>{
+    try{
+        const gallery= await WorkGallery.find({shop:req.shop}).sort({_id:-1});
+        res.json(gallery);
+    }
+    catch(e){
+       res.status(500).send({message:"Error retrieving workgallery"});
+    }
+});
 //to create a new deal;
 router.post("/",authorization,hasShop,upload.single("image"),async(req,res)=>{
     req.body.imageUrl=req.upload;
