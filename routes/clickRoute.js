@@ -18,12 +18,13 @@ router.post("/:shopId",async(req,res)=>{
 });
 router.get("/",authorization,async(req,res)=>{
     try{
-        var shop=await Shop.find({owner:req.user});
-        var result=await click.find({shop:shop});
+        var shop=await Shop.find({owner:req.user.id});
+        var result=await Click.find({shop:shop});
         res.send(result);
     }
     catch(e){
-        res.status(500).send();
+        res.status(500).send(e);
     }
 
 });
+module.exports=router;
