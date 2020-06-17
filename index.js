@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-// const dotenv = require("dotenv");
+const dotenv = require("dotenv");
 var morgan = require("morgan");
 const path = require("path");
 const Shop = require("./models/shop");
@@ -8,7 +8,7 @@ const Shop = require("./models/shop");
 const appMiddleware = require("./middlewares/appmiddleware");
 //models
 const User = require("./models/user");
-// dotenv.config();
+dotenv.config();
 const app = express();
 app.use("/public", express.static(path.join(__dirname, "public")));
 

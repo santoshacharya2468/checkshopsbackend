@@ -43,9 +43,9 @@ router.get("/", async (req, res) => {
 });
 router.get("/myshop", authorization, async (req, res) => {
   try {
-    var user = await User.findOne({ email: req.user.email })
-    .select("+_id");
+    var user = await User.findOne({ email: req.user.email }).select("+_id");
     var shop = await Shop.findOne({ owner: user.id }).populate("category");
+
     res.status(200).json(shop);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -156,20 +156,63 @@ router.post("/", upload.single("logo"), async (req, res) => {
   }
 });
 
-router.put("/myshop/update", authorization, async (req, res) => {
-  try {
-    var user = await User.findOne({ email: req.user.email }).select("+_id");
-    var shop = await Shop.findOneAndUpdate(
-      { owner: user.id },
-      { $set: { shopDescription: req.body.shopDescription } }
-    );
-    if (!shop) {
-      res.status(404).send({ message: "Internal Error" });
+router.put(
+  "/myshop/update",
+  authorization,
+  upload.single("logo"),
+  async (req, res) => {
+    try {
+      var user = await User.findOne({ email: req.user.email }).select("+_id");
+      var { body: newShop } = req;
+
+      if (newShop.businessName !== null && req.logo !== undefined) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              businessName: newShop.businessName,
+              businessLogo: req.logo,
+              address: newShop.address,
+              mobiles: newShop.mobiles,
+              telephones: newShop.telephones,
+              website: newShop.website,
+              district: newShop.district,
+            },
+          },
+          { new: true }
+        ).populate("category");
+        console.log(shop);
+      } else if (newShop.businessName !== null && req.logo === undefined) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              businessName: newShop.businessName,
+              address: newShop.address,
+              mobiles: newShop.mobiles,
+              telephones: newShop.telephones,
+              website: newShop.website,
+              district: newShop.district,
+            },
+          },
+          { new: true }
+        ).populate("category");
+        console.log(shop);
+      } else {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          { $set: { shopDescription: newShop.shopDescription } },
+          { new: true }
+        ).populate("category");
+      }
+      if (!shop) {
+        return res.status(404).send({ message: "Internal Error" });
+      }
+      res.status(200).send(shop);
+    } catch (error) {
+      res.status(400).send({ message: error.message });
     }
-    res.status(200).send({});
-  } catch (error) {
-    res.status(400).send({ message: error.message });
   }
-});
+);
 
 module.exports = router;
