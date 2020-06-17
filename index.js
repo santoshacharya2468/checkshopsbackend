@@ -30,10 +30,15 @@ const accountRoute = require("./routes/accountRoute");
 const shopRoute = require("./routes/shopRoute");
 const dealRoute = require("./routes/dealRoute");
 const categoryRoute = require("./routes/categoryRoute");
+const galleryRoute=require("./routes/workGalleryRoute");
+const clickRoute=require("./routes/clickRoute");
 app.use("/account", appMiddleware, accountRoute);
 app.use("/shop", appMiddleware, shopRoute);
 app.use("/category", appMiddleware, categoryRoute);
 app.use("/deal", appMiddleware, dealRoute);
+app.use("/gallery", appMiddleware, galleryRoute);
+app.use("/click",clickRoute);
+//search route
 app.get("/search/:query", async (req, res) => {
   //this route should be paginated
   try {
