@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 var path = require('path');
+var fs = require("fs");
 var appDir = path.dirname(require.main.filename);
 const multer=require("multer");
 const authorization=require("../middlewares/authorization");
@@ -26,6 +27,21 @@ router.get("/:shopId",async(req,res)=>{
     }
     catch(e){
        res.status(500).send({message:"Error retrieving workgallery"});
+    }
+});
+router.delete("/:galleryId",authorization,hasShop,async(req,res)=>{
+    try{
+        const gallery= await WorkGallery.findById(req.params.galleryId);
+       await WorkGallery.findOneAndRemove({_id:req.params.galleryId,shop:req.shop});
+        try{
+        fs.unlinkSync(appDir +gallery.imageUrl);
+        }
+        catch(e){}
+        res.status(204).json(gallery);
+    
+}
+    catch(e){
+       res.status(500).send({message:"Error delteting workgallery"+e});
     }
 });
 router.get("/",authorization,hasShop,async(req,res)=>{
