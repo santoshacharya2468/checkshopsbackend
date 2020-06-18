@@ -164,6 +164,9 @@ router.put(
     try {
       var user = await User.findOne({ email: req.user.email }).select("+_id");
       var { body: newShop } = req;
+      console.log(req.body);
+      console.log(req.logo);
+      console.log(newShop.businessName);
 
       if (newShop.businessName !== null && req.logo !== undefined) {
         var shop = await Shop.findOneAndUpdate(
@@ -182,7 +185,7 @@ router.put(
           { new: true }
         ).populate("category");
         console.log(shop);
-      } else if (newShop.businessName !== null && req.logo === undefined) {
+      } else if (newShop.businessName !== undefined && req.logo === undefined) {
         var shop = await Shop.findOneAndUpdate(
           { owner: user.id },
           {
