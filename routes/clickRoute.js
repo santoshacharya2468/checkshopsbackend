@@ -21,7 +21,7 @@ router.get("/", authorization, hasShop, async (req, res) => {
     try {
         // var clicks = await Click.find({ shop: req.shop });
         // res.send(clicks);
-        var result=await Click.find({shop:req.shop}).sort({_id:-1});
+        var result=await Click.find({shop:req.shop}).sort({clickDate:-1});
        // res.send(result);
         if(result.length>0){
             var data=[];
