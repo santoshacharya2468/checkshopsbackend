@@ -21,7 +21,7 @@ router.get("/", authorization, hasShop, async (req, res) => {
     try {
         // var Likes = await Like.find({ shop: req.shop });
         // res.send(Likes);
-        var result=await Like.find({shop:req.shop}).sort({_likeDate:-1});
+        var result=await Like.find({shop:req.shop}).sort({likeDate:-1});
         if(result.length>0){
             var data=[];
             var startDate=result[0].likeDate;
