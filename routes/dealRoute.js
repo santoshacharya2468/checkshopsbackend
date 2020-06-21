@@ -21,7 +21,19 @@ const Deal=require("../models/deal");
 //should use pagination;
 router.get("/",async(req,res)=>{
     try{
-        const deals= await Deal.find().sort({_id:-1});
+        const deals= await Deal.find()
+        .limit(8)
+        .sort({_id:-1});
+        res.json(deals);
+    }
+    catch(e){
+       res.status(500).send({message:"Error retrieving deals"});
+    }
+});
+router.get("/alldeals",async(req,res)=>{
+    try{
+        const deals= await Deal.find()
+        .sort({_id:-1});
         res.json(deals);
     }
     catch(e){

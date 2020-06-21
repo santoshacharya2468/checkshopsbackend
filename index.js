@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
 var morgan = require("morgan");
 const path = require("path");
 const Shop = require("./models/shop");
@@ -21,7 +20,7 @@ mongoose.connect(process.env.dbCon, {
 app.use(morgan("tiny"));
 
 app.listen(process.env.PORT || 8080, () =>
-  console.log(`Server running on port ..${process.env.PORT}`)
+  console.log(`Server running on port ${process.env.PORT}`)
 );
 
 app.use(express.json());
