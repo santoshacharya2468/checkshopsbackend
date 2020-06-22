@@ -82,14 +82,21 @@ const shopSchema = mongoose.Schema({
   shopDescription: {
     type: String,
   },
-  colorIndex: {
-    type: Number,
-  },
+
   discountPercent: {
     type: Number,
   },
-  businessBanner: {
+
+  profilePicture: {
     type: String,
+  },
+  profileVideo: {
+    type: String,
+  },
+  banner: {
+    showDiscount: { type: Boolean, default: false },
+    colorIndex: { type: Number },
+    selectProfile: { type: Boolean },
   },
 });
 module.exports = mongoose.model("Shop", shopSchema);

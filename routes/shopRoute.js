@@ -12,11 +12,29 @@ const router = express.Router();
 var appDir = path.dirname(require.main.filename);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, appDir + "/public/shops");
+    console.log(file.fieldname);
+    // // console.log("here");
+    // console.log(file);
+    if (file.fieldname === "logo") {
+      return cb(null, appDir + "/public/shops");
+    } else if (file.fieldname === "profilePicture") {
+      return cb(null, appDir + "/public/shops/profilepicture");
+    } else if (file.fieldname === "profileVideo") {
+      return cb(null, appDir + "/public/shops/profilevideo");
+    }
+    // cb(null, appDir + "/public/shops/profilevideo");
   },
   filename: (req, file, cb) => {
     let filename = Date.now() + "_" + file.originalname;
-    req.logo = "/public/shops/" + filename;
+    if (file.fieldname === "logo") {
+      req.logo = "/public/shops/" + filename;
+    } else if (file.fieldname === "profilePicture") {
+      req.profilePicture = "/public/shops/profilepicture/" + filename;
+    } else if (file.fieldname === "profileVideo") {
+      req.profileVideo = "public/shops/profilevideo/" + filename;
+    }
+    // req.profileVideo = "public/shops/profilevideo/" + filename;
+
     cb(null, filename);
   },
 });
@@ -159,16 +177,25 @@ router.post("/", upload.single("logo"), async (req, res) => {
 router.put(
   "/myshop/update",
   authorization,
-  upload.single("logo"),
+  upload.single("profileVideo"),
   async (req, res) => {
     try {
       var user = await User.findOne({ email: req.user.email }).select("+_id");
       var { body: newShop } = req;
-      console.log(req.body);
-      console.log(req.logo);
-      console.log(newShop.businessName);
-
-      if (newShop.businessName !== null && req.logo !== undefined) {
+      if (newShop.colorIndex !== null) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              "banner.colorIndex": newShop.colorIndex,
+              "banner.showDiscount": newShop.showDiscount,
+              "banner.selectProfile": newShop.selectProfile,
+              discountPercent: newShop.discountPercent,
+            },
+          },
+          { new: true }
+        );
+      } else if (newShop.businessName !== null && req.logo !== undefined) {
         var shop = await Shop.findOneAndUpdate(
           { owner: user.id },
           {
@@ -214,6 +241,101 @@ router.put(
       res.status(200).send(shop);
     } catch (error) {
       res.status(400).send({ message: error.message });
+    }
+  }
+);
+
+router.put(
+  "/myshop/banner",
+  authorization,
+  upload.fields([
+    { name: "profilePicture", maxCount: 2 },
+    { name: "profileVideo", maxCount: 2 },
+  ]),
+  async (req, res) => {
+    var user = await User.findOne({ email: req.user.email }).select("+_id");
+    var { body: newShop } = req;
+    // console.log(req);
+    console.log(req.profileVideo);
+    console.log(req.profilePicture);
+    try {
+      if (req.profilePicture != undefined && req.profileVideo != undefined) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              "banner.colorIndex": newShop.colorIndex,
+              "banner.showDiscount": newShop.showDiscount,
+              "banner.selectProfile": newShop.selectProfile,
+              discountPercent: newShop.discountPercent,
+              profilePicture: req.profilePicture,
+              profileVideo: req.profileVideo,
+            },
+          },
+          { new: true }
+        ).populate("category");
+      } else if (
+        req.profilePicture == undefined &&
+        req.profileVideo != undefined
+      ) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              "banner.colorIndex": newShop.colorIndex,
+              "banner.showDiscount": newShop.showDiscount,
+              "banner.selectProfile": newShop.selectProfile,
+              discountPercent: newShop.discountPercent,
+              // profilePicture:req.profilePicture,
+              profileVideo: req.profileVideo,
+            },
+          },
+          { new: true }
+        ).populate("category");
+      } else if (
+        req.profilePicture != undefined &&
+        req.profileVideo == undefined
+      ) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              "banner.colorIndex": newShop.colorIndex,
+              "banner.showDiscount": newShop.showDiscount,
+              "banner.selectProfile": newShop.selectProfile,
+              discountPercent: newShop.discountPercent,
+              profilePicture: req.profilePicture,
+              //profileVideo: req.profileVideo,
+            },
+          },
+          { new: true }
+        ).populate("category");
+      } else if (
+        req.profilePicture == undefined &&
+        req.profileVideo == undefined
+      ) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
+              "banner.colorIndex": newShop.colorIndex,
+              "banner.showDiscount": newShop.showDiscount,
+              "banner.selectProfile": newShop.selectProfile,
+              discountPercent: newShop.discountPercent,
+              // profilePicture:req.profilePicture,
+              // profileVideo:req.profileVideo,
+            },
+          },
+          { new: true }
+        ).populate("category");
+      }
+
+      if (!shop) {
+        return res.status(404).send({ message: "Internal Error" });
+      }
+      res.status(200).send(shop);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
   }
 );
