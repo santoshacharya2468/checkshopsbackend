@@ -54,13 +54,13 @@ app.get("/search/:query", async (req, res) => {
     res.status(500).send({ message: "server error" + e });
   }
 });
-app.get("/service/:shopId", async (req, res) => {
+app.get("/provider/:shopId", async (req, res) => {
   //this route should be paginated
   try {
-    var shops = await Shop.findById(req.params.shopId)
+    var shop = await Shop.findById(req.params.shopId)
       .populate("category");
       if(shop!=null){
-        res.json(shops);
+        res.json(shop);
       }else{
         res.status(404).send({message:"A service provider with given id not  found"});
       }
