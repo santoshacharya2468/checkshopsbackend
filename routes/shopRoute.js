@@ -255,9 +255,10 @@ router.put(
   async (req, res) => {
     var user = await User.findOne({ email: req.user.email }).select("+_id");
     var { body: newShop } = req;
+    var date = Date.now();
     // console.log(req);
-    console.log(req.profileVideo);
-    console.log(req.profilePicture);
+    // console.log(req.profileVideo);
+    // console.log(req.profilePicture);
     try {
       if (req.profilePicture != undefined && req.profileVideo != undefined) {
         var shop = await Shop.findOneAndUpdate(
@@ -270,6 +271,7 @@ router.put(
               discountPercent: newShop.discountPercent,
               profilePicture: req.profilePicture,
               profileVideo: req.profileVideo,
+              updatedDate: date,
             },
           },
           { new: true }
@@ -288,6 +290,7 @@ router.put(
               discountPercent: newShop.discountPercent,
               // profilePicture:req.profilePicture,
               profileVideo: req.profileVideo,
+              updatedDate: date,
             },
           },
           { new: true }
@@ -305,6 +308,7 @@ router.put(
               "banner.selectProfile": newShop.selectProfile,
               discountPercent: newShop.discountPercent,
               profilePicture: req.profilePicture,
+              updatedDate: date,
               //profileVideo: req.profileVideo,
             },
           },
@@ -322,6 +326,7 @@ router.put(
               "banner.showDiscount": newShop.showDiscount,
               "banner.selectProfile": newShop.selectProfile,
               discountPercent: newShop.discountPercent,
+              updatedDate: date,
               // profilePicture:req.profilePicture,
               // profileVideo:req.profileVideo,
             },
