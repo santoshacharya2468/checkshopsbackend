@@ -7,8 +7,8 @@ const Shop = require("./models/shop");
 const appMiddleware = require("./middlewares/appmiddleware");
 //models
 const User = require("./models/user");
-const dotenv = require("dotenv");
-dotenv.config();
+//const dotenv = require("dotenv");
+//dotenv.config();
 const app = express();
 app.use("/public", express.static(path.join(__dirname, "public")));
 
@@ -57,14 +57,14 @@ app.get("/search/:query", async (req, res) => {
 app.get("/provider/:shopId", async (req, res) => {
   //this route should be paginated
   try {
-    var shop = await Shop.findById(req.params.shopId)
-      .populate("category");
-      if(shop!=null){
-        res.json(shop);
-      }else{
-        res.status(404).send({message:"A service provider with given id not  found"});
-      }
-     
+    var shop = await Shop.findById(req.params.shopId).populate("category");
+    if (shop != null) {
+      res.json(shop);
+    } else {
+      res
+        .status(404)
+        .send({ message: "A service provider with given id not  found" });
+    }
   } catch (e) {
     res.status(500).send({ message: "server error" + e });
   }
