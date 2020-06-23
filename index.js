@@ -51,7 +51,7 @@ app.get("/search/:query", async (req, res) => {
       .limit(20);
     res.json(shops);
   } catch (e) {
-    res.status(500).send({ message: "server error" + e });
+    res.status(500).send({ message: "server error" + e.message });
   }
 });
 app.get("/provider/:shopId", async (req, res) => {
