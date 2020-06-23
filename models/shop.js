@@ -98,5 +98,9 @@ const shopSchema = mongoose.Schema({
     colorIndex: { type: Number },
     selectProfile: { type: Boolean },
   },
+  updatedDate: {
+    type: Date,
+    default: Date.now,
+  },
 });
 module.exports = mongoose.model("Shop", shopSchema);
