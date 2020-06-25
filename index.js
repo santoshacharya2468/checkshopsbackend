@@ -7,9 +7,9 @@ const Shop = require("./models/shop");
 const appMiddleware = require("./middlewares/appmiddleware");
 //models
 const User = require("./models/user");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 // dotenv.config();
-// const app = express();
+const app = express();
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 mongoose.connect(process.env.dbCon, {
