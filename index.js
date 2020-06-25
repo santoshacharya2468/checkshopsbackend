@@ -8,8 +8,8 @@ const appMiddleware = require("./middlewares/appmiddleware");
 //models
 const User = require("./models/user");
 const dotenv = require("dotenv");
-dotenv.config();
-const app = express();
+// dotenv.config();
+// const app = express();
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 mongoose.connect(process.env.dbCon, {
@@ -19,7 +19,7 @@ mongoose.connect(process.env.dbCon, {
 });
 app.use(morgan("tiny"));
 
-app.listen(process.env.PORT || 8080, "192.168.100.101", () =>
+app.listen(process.env.PORT || 8080, () =>
   console.log(`Server running on port ${process.env.PORT}`)
 );
 

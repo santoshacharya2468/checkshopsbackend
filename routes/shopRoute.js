@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
     } else if (file.fieldname === "profilePicture") {
       req.profilePicture = "/public/shops/profilepicture/" + filename;
     } else if (file.fieldname === "profileVideo") {
-      req.profileVideo = "public/shops/profilevideo/" + filename;
+      req.profileVideo = "/public/shops/profilevideo/" + filename;
     }
     // req.profileVideo = "public/shops/profilevideo/" + filename;
 
@@ -49,6 +49,7 @@ router.get("/", async (req, res) => {
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ _id: -1 });
+
     if ((await Shop.count()) > perPage * page) {
       var nextPage = Number(page) + 1;
     } else {
@@ -59,6 +60,7 @@ router.get("/", async (req, res) => {
     res.status(500).send({ message: "server error" + e });
   }
 });
+
 router.get("/myshop", authorization, async (req, res) => {
   try {
     var user = await User.findOne({ email: req.user.email }).select("+_id");
@@ -326,7 +328,7 @@ router.put(
               "banner.showDiscount": newShop.showDiscount,
               "banner.selectProfile": newShop.selectProfile,
               discountPercent: newShop.discountPercent,
-              updatedDate: date,
+              // updatedDate: date,
               // profilePicture:req.profilePicture,
               // profileVideo:req.profileVideo,
             },
