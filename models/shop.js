@@ -95,8 +95,8 @@ const shopSchema = mongoose.Schema({
   },
   banner: {
     showDiscount: { type: Boolean, default: false },
-    colorIndex: { type: Number },
-    selectProfile: { type: Boolean },
+    colorIndex: { type: Number, default: 0 },
+    selectProfile: { type: Boolean, default: false },
   },
   updatedDate: {
     type: Date,

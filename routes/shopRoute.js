@@ -179,25 +179,26 @@ router.post("/", upload.single("logo"), async (req, res) => {
 router.put(
   "/myshop/update",
   authorization,
-  upload.single("profileVideo"),
+  upload.single("logo"),
   async (req, res) => {
     try {
       var user = await User.findOne({ email: req.user.email }).select("+_id");
       var { body: newShop } = req;
-      if (newShop.colorIndex !== null) {
-        var shop = await Shop.findOneAndUpdate(
-          { owner: user.id },
-          {
-            $set: {
-              "banner.colorIndex": newShop.colorIndex,
-              "banner.showDiscount": newShop.showDiscount,
-              "banner.selectProfile": newShop.selectProfile,
-              discountPercent: newShop.discountPercent,
-            },
-          },
-          { new: true }
-        );
-      } else if (newShop.businessName !== null && req.logo !== undefined) {
+      // if (newShop.colorIndex !== null) {
+      //   var shop = await Shop.findOneAndUpdate(
+      //     { owner: user.id },
+      //     {
+      //       $set: {
+      //         "banner.colorIndex": newShop.colorIndex,
+      //         "banner.showDiscount": newShop.showDiscount,
+      //         "banner.selectProfile": newShop.selectProfile,
+      //         discountPercent: newShop.discountPercent,
+      //       },
+      //     },
+      //     { new: true }
+      //   );
+      // } else
+      if (newShop.businessName !== null && req.logo !== undefined) {
         var shop = await Shop.findOneAndUpdate(
           { owner: user.id },
           {
