@@ -6,7 +6,7 @@ const multer = require("multer");
 const authorization = require("../middlewares/authorization");
 const hasShop = require("../middlewares/hasShop");
 const perPage = 5;
-const Shop = require("../models/user");
+const Shop = require("../models/shop");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, appDir + "/public/deals");
@@ -21,48 +21,48 @@ const upload = multer({ storage: storage });
 const Deal = require("../models/deal");
 //to get all deals;
 //should use pagination;
-router.get("/", async (req, res) => {
-  try {
-    const deals = await Deal.find().limit(8).sort({ _id: -1 });
-    res.json(deals);
-  } catch (e) {
-    res.status(500).send({ message: "Error retrieving deals" });
-  }
-});
-router.get("/alldeals", async (req, res) => {
-  try {
-    const deals = await Deal.find().sort({ _id: -1 });
-    res.json(deals);
-  } catch (e) {
-    res.status(500).send({ message: "Error retrieving deals" });
-  }
-});
-router.get("/:shopId", async (req, res) => {
-  try {
-    const deals = await Deal.find({ shop: req.params.shopId }).sort({
-      _id: -1,
-    });
-    res.json(deals);
-  } catch (e) {
-    res.status(500).send({ message: "Error retrieving deals" });
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const deals = await Deal.find().limit(8).sort({ _id: -1 });
+//     res.json(deals);
+//   } catch (e) {
+//     res.status(500).send({ message: "Error retrieving deals" });
+//   }
+// });
+// router.get("/alldeals", async (req, res) => {
+//   try {
+//     const deals = await Deal.find().sort({ _id: -1 });
+//     res.json(deals);
+//   } catch (e) {
+//     res.status(500).send({ message: "Error retrieving deals" });
+//   }
+// });
+// router.get("/:shopId", async (req, res) => {
+//   try {
+//     const deals = await Deal.find({ shop: req.params.shopId }).sort({
+//       _id: -1,
+//     });
+//     res.json(deals);
+//   } catch (e) {
+//     res.status(500).send({ message: "Error retrieving deals" });
+//   }
+// });
 //get deals based upon the category;
-router.get("/:catId", async (req, res) => {
-  try {
-    const deals = await Deal.find();
-    res.json(deals);
-  } catch (e) {
-    res.status(500).send({ message: "Error retrieving deals" });
-  }
-});
+// router.get("/:catId", async (req, res) => {
+//   try {
+//     const deals = await Deal.find();
+//     res.json(deals);
+//   } catch (e) {
+//     res.status(500).send({ message: "Error retrieving deals" });
+//   }
+// });
 
 //get the latest deals
-router.get("/latestdeals/", async (req, res) => {
+router.get("/latestdeals", async (req, res) => {
   var page = req.query.page || 1;
 
   try {
-    var shop = Shop.find()
+    var deals = await Shop.find()
       .select("profileVideo profilePicture updatedDate")
       .limit(perPage)
       .skip((page - 1) * perPage)
@@ -72,7 +72,7 @@ router.get("/latestdeals/", async (req, res) => {
     } else {
       nextPage = null;
     }
-    res.status(200).json({ shop: shops, next: nextPage });
+    res.status(200).json({ deals: deals, next: nextPage });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
