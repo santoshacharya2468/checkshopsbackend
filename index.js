@@ -33,6 +33,10 @@ const categoryRoute = require("./routes/categoryRoute");
 const galleryRoute = require("./routes/workGalleryRoute");
 const clickRoute = require("./routes/clickRoute");
 const likeRoute = require("./routes/likeRoute");
+const adminShopRoute=require("./routes/adminShopRoute");
+const adminCategoryRoute=require("./routes/adminCategoryRoute");
+const admin=require("./routes/adminDashBoard");
+const authorization = require("./middlewares/authorization");
 app.use("/account", appMiddleware, accountRoute);
 app.use("/shop", appMiddleware, shopRoute);
 app.use("/category", appMiddleware, categoryRoute);
@@ -40,6 +44,11 @@ app.use("/deal", appMiddleware, dealRoute);
 app.use("/gallery", appMiddleware, galleryRoute);
 app.use("/click", appMiddleware, clickRoute);
 app.use("/like", appMiddleware, likeRoute);
+//admin route
+app.use("admin-shop/",adminShopRoute);
+app.use("/admin-category",adminCategoryRoute);
+app.use("/admin",authorization,admin);
+
 //search route
 app.get("/search/:query", async (req, res) => {
   //this route should be paginated
