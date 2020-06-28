@@ -9,11 +9,19 @@ const perPage = 5;
 const Shop = require("../models/shop");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, appDir + "/public/deals");
+    if (file.fieldname === "profileVideo") {
+      cb(null, appDir + "/public/deals/profilevideo/");
+    } else if (file.fieldname === "profilePicture") {
+      cb(null, appDir + "/public/deals/profilepicture/");
+    }
   },
   filename: (req, file, cb) => {
     let filename = Date.now() + "_" + file.originalname;
-    req.upload = "/public/deals/" + filename;
+    if (file.fieldname === "profileVideo") {
+      req.profileVideo = "/public/deals/profilevideo/" + filename;
+    } else if (file.fieldname === "profilePicture") {
+      req.profilePicture = "/public/deals/profilepicture/" + filename;
+    }
     cb(null, filename);
   },
 });
@@ -78,21 +86,45 @@ router.get("/latestdeals", async (req, res) => {
   }
 });
 //to create a new deal;
+// router.post(
+//   "/",
+//   authorization,
+//   hasShop,
+//   upload.,
+//   async (req, res) => {
+//     req.body.bannerImage = req.upload;
+//     req.body.shop = req.shop;
+//     let deal = new Deal(req.body);
+//     try {
+//       var result = await deal.save();
+//       res.status(201).send(result);
+//     } catch (e) {
+//       res.status(400).send(e);
+//     }
+//   }
+// );
 router.post(
   "/",
   authorization,
-  hasShop,
-  upload.single("bannerImage"),
+  upload.fields([
+    { name: "profileVideo", maxCount: 2 },
+    { name: "profilePicture", maxCount: 2 },
+  ]),
   async (req, res) => {
-    req.body.bannerImage = req.upload;
-    req.body.shop = req.shop;
-    let deal = new Deal(req.body);
-    try {
-      var result = await deal.save();
-      res.status(201).send(result);
-    } catch (e) {
-      res.status(400).send(e);
-    }
+    var user = await User.findOne({ email: req.user.email }).select("+_id");
+    req.deal.shop = shop.id;
+    req.deal.profileVideo = req.profileVideo;
+    req.deal.profilePicture = req.profilePicture;
+    var shop = await Shop.findOne({ owner: user.id }).select("+_id");
+    if (req.profileVideo !== undefined || req.profilePicture !== undefined) {
+      var deal = new Deal(req.deal);
+      try {
+        var result = Deal.save();
+        res.staus(200).send(result);
+      } catch (error) {
+        res.status(400).send({ message: error.message });
+      }
+    } else res.staus(200);
   }
 );
 module.exports = router;

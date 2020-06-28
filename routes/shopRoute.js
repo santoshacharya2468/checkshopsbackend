@@ -9,6 +9,7 @@ const perPage = 6;
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
+const Deal = require("../models/deal");
 var appDir = path.dirname(require.main.filename);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -259,22 +260,15 @@ router.put(
     var user = await User.findOne({ email: req.user.email }).select("+_id");
     var { body: newShop } = req;
     var date = Date.now();
-    // console.log(req);
-    // console.log(req.profileVideo);
-    // console.log(req.profilePicture);
     try {
       if (req.profilePicture != undefined && req.profileVideo != undefined) {
         var shop = await Shop.findOneAndUpdate(
           { owner: user.id },
           {
             $set: {
-              "banner.colorIndex": newShop.colorIndex,
-              "banner.showDiscount": newShop.showDiscount,
               "banner.selectProfile": newShop.selectProfile,
-              discountPercent: newShop.discountPercent,
               profilePicture: req.profilePicture,
               profileVideo: req.profileVideo,
-              updatedDate: date,
             },
           },
           { new: true }
@@ -287,13 +281,8 @@ router.put(
           { owner: user.id },
           {
             $set: {
-              "banner.colorIndex": newShop.colorIndex,
-              "banner.showDiscount": newShop.showDiscount,
               "banner.selectProfile": newShop.selectProfile,
-              discountPercent: newShop.discountPercent,
-              // profilePicture:req.profilePicture,
               profileVideo: req.profileVideo,
-              updatedDate: date,
             },
           },
           { new: true }
@@ -306,13 +295,24 @@ router.put(
           { owner: user.id },
           {
             $set: {
+              "banner.selectProfile": newShop.selectProfile,
+              profilePicture: req.profilePicture,
+            },
+          },
+          { new: true }
+        ).populate("category");
+      } else if (
+        req.profilePicture == undefined &&
+        req.profileVideo == undefined &&
+        newShop.discountPercent !== undefined
+      ) {
+        var shop = await Shop.findOneAndUpdate(
+          { owner: user.id },
+          {
+            $set: {
               "banner.colorIndex": newShop.colorIndex,
               "banner.showDiscount": newShop.showDiscount,
-              "banner.selectProfile": newShop.selectProfile,
               discountPercent: newShop.discountPercent,
-              profilePicture: req.profilePicture,
-              updatedDate: date,
-              //profileVideo: req.profileVideo,
             },
           },
           { new: true }
@@ -321,18 +321,33 @@ router.put(
         req.profilePicture == undefined &&
         req.profileVideo == undefined
       ) {
+        var shop = await Shop.findOne({ owner: user.id }).select("+_id");
+        var deal1 = await Deal.find({
+          shop: shop.id,
+          profilePicture: { $ne: null },
+        })
+          .sort({ _id: -1 })
+          .limit(1)
+          .select({ profilePicture: 1 });
+        var deal2 = await Deal.find({
+          shop: shop.id,
+          profileVideo: { $ne: null },
+        })
+          .sort({ _id: -1 })
+          .limit(1)
+          .select({ profileVideo: 1 });
+        newShop.profilePicture = deal1.profilePicture;
+        newShop.profileVideo = deal2.profileVideo;
+        console.log(deal1);
+        console.log(deal2);
         var shop = await Shop.findOneAndUpdate(
           { owner: user.id },
           {
             $set: {
-              "banner.colorIndex": newShop.colorIndex,
-              "banner.showDiscount": newShop.showDiscount,
-              "banner.selectProfile": newShop.selectProfile,
-              discountPercent: newShop.discountPercent,
-              // updatedDate: date,
-              // profilePicture:req.profilePicture,
-              // profileVideo:req.profileVideo,
-            },
+              "banner.showProfile": newShop.selectProfile,
+              profilePicture:newShop.profilePicture,
+              profileVideo = newShop.profileVideo
+                  },
           },
           { new: true }
         ).populate("category");
