@@ -71,7 +71,7 @@ router.delete("/:catId", authorization,async (req, res) => {
           catch(e){
             console.log(e);
           }
-        res.status(201).send(result);
+        res.status(201).send(await Category.findById(req.params.catId));
       } catch (e) {
         res.status(400).send(e);
       }
