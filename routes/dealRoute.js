@@ -6,7 +6,6 @@ const multer = require("multer");
 const authorization = require("../middlewares/authorization");
 const hasShop = require("../middlewares/hasShop");
 const perPage = 5;
-const Shop = require("../models/shop");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "profileVideo") {
@@ -55,7 +54,7 @@ const Deal = require("../models/deal");
 //     res.status(500).send({ message: "Error retrieving deals" });
 //   }
 // });
-//get deals based upon the category;
+// get deals based upon the category;
 // router.get("/:catId", async (req, res) => {
 //   try {
 //     const deals = await Deal.find();
@@ -70,12 +69,11 @@ router.get("/latestdeals", async (req, res) => {
   var page = req.query.page || 1;
 
   try {
-    var deals = await Shop.find()
-      .select("profileVideo profilePicture updatedDate")
+    var deals = await Deal.find()
       .limit(perPage)
       .skip((page - 1) * perPage)
-      .sort({ updatedDate: -1 });
-    if ((await Shop.count()) > perPage * page) {
+      .sort({ _id: -1 });
+    if ((await Deal.count()) > perPage * page) {
       var nextPage = Number(page) + 1;
     } else {
       nextPage = null;

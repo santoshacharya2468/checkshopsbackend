@@ -68,7 +68,7 @@ const shopSchema = mongoose.Schema({
   },
   activated: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   category: {
     type: mongoose.Types.ObjectId,
