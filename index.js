@@ -45,8 +45,8 @@ app.use("/gallery", appMiddleware, galleryRoute);
 app.use("/click", appMiddleware, clickRoute);
 app.use("/like", appMiddleware, likeRoute);
 //admin route
-app.use("admin-shop/",adminShopRoute);
-app.use("/admin-category",adminCategoryRoute);
+app.use("/admin-shop",authorization,adminShopRoute);
+app.use("/admin-category",authorization,adminCategoryRoute);
 app.use("/admin",authorization,admin);
 
 //search route
