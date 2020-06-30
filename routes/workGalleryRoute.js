@@ -44,6 +44,21 @@ router.delete("/:galleryId",authorization,hasShop,async(req,res)=>{
        res.status(500).send({message:"Error delteting workgallery"+e});
     }
 });
+router.delete("/admin/:galleryId",authorization,hasShop,async(req,res)=>{
+    try{
+        const gallery= await WorkGallery.findById(req.params.galleryId);
+       await WorkGallery.findOneAndRemove({_id:req.params.galleryId});
+        try{
+        fs.unlinkSync(appDir +gallery.imageUrl);
+        }
+        catch(e){}
+        res.status(204).json(gallery);
+    
+}
+    catch(e){
+       res.status(500).send({message:"Error delteting workgallery"+e});
+    }
+});
 router.get("/",authorization,hasShop,async(req,res)=>{
     try{
         const gallery= await WorkGallery.find({shop:req.shop}).sort({_id:-1});
