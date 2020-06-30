@@ -64,12 +64,12 @@ app.get("/search/:query", async (req, res) => {
     res.status(500).send({ message: "server error" + e.message });
   }
 });
-app.get("/admin/search/:query", async (req, res) => {
+app.get("/admin-search/:query", async (req, res) => {
   //this route should be paginated
   try {
     var shops = await Shop.find({
       businessName: { $regex: req.params.query, $options: "i" },
-      
+    
     })
       .populate("category")
       .limit(20);
