@@ -1,7 +1,7 @@
 const Shop = require("../models/shop");
 const authorization = require("../middlewares/authorization");
 var fs = require("fs");
-const perPage = 6;
+const perPage = 18;
 const express=require("express");
 const router = express.Router();
 //activate or deactivate a shop
