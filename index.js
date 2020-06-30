@@ -55,6 +55,36 @@ app.get("/search/:query", async (req, res) => {
   try {
     var shops = await Shop.find({
       businessName: { $regex: req.params.query, $options: "i" },
+      activated:true,
+    })
+      .populate("category")
+      .limit(20);
+    res.json(shops);
+  } catch (e) {
+    res.status(500).send({ message: "server error" + e.message });
+  }
+});
+app.get("/admin/search/:query", async (req, res) => {
+  //this route should be paginated
+  try {
+    var shops = await Shop.find({
+      businessName: { $regex: req.params.query, $options: "i" },
+      
+    })
+      .populate("category")
+      .limit(20);
+    res.json(shops);
+  } catch (e) {
+    res.status(500).send({ message: "server error" + e.message });
+  }
+});
+app.get("/admin-search/:catId/:query", async (req, res) => {
+  //this route should be paginated
+  try {
+    var shops = await Shop.find({
+      businessName: { $regex: req.params.query, $options: "i" },
+      category:req.params.catId
+      
     })
       .populate("category")
       .limit(20);
