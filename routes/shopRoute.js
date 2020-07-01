@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
   let page = req.query.page || 1;
   //this route should be paginated
   try {
-    var shops = await Shop.find()
+    var shops = await Shop.find({activated:true})
       .populate("category")
       .skip((page - 1) * perPage)
       .limit(perPage)
@@ -75,7 +75,7 @@ router.get("/:catId", async (req, res) => {
   let page = req.query.page || 1;
   //this route should be paginated
   try {
-    var shops = await Shop.find({ category: req.params.catId })
+    var shops = await Shop.find({ category: req.params.catId,activated:true })
       .populate("category")
       .skip((page - 1) * perPage)
       .limit(perPage)
@@ -98,6 +98,7 @@ router.get("/:catId/:district", async (req, res) => {
     var shops = await Shop.find({
       category: req.params.catId,
       district: district,
+     activated:true
     })
       .populate("category")
       .skip((page - 1) * perPage)
