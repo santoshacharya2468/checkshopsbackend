@@ -13,7 +13,6 @@ const Deal = require("../models/deal");
 var appDir = path.dirname(require.main.filename);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log(file.fieldname);
     // // console.log("here");
     // console.log(file);
     if (file.fieldname === "logo") {
@@ -27,6 +26,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     let filename = Date.now() + "_" + file.originalname;
+
     if (file.fieldname === "logo") {
       req.logo = "/public/shops/" + filename;
     } else if (file.fieldname === "profilePicture") {
@@ -259,6 +259,7 @@ router.put(
   async (req, res) => {
     var user = await User.findOne({ email: req.user.email }).select("+_id");
     var { body: newShop } = req;
+    console.log(req.profilePicture);
     var date = Date.now();
     try {
       if (req.profilePicture != undefined && req.profileVideo != undefined) {
@@ -345,9 +346,9 @@ router.put(
           {
             $set: {
               "banner.showProfile": newShop.selectProfile,
-              profilePicture:newShop.profilePicture,
-              profileVideo = newShop.profileVideo
-                  },
+              profilePicture: newShop.profilePicture,
+              profileVideo: newShop.profileVideo,
+            },
           },
           { new: true }
         ).populate("category");

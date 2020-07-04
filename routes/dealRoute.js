@@ -6,8 +6,11 @@ const multer = require("multer");
 const authorization = require("../middlewares/authorization");
 const hasShop = require("../middlewares/hasShop");
 const perPage = 5;
+const User = require("../models/user");
+const Shop = require("../models/shop");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log(file.fieldname);
     if (file.fieldname === "profileVideo") {
       cb(null, appDir + "/public/deals/profilevideo/");
     } else if (file.fieldname === "profilePicture") {
@@ -110,19 +113,24 @@ router.post(
   ]),
   async (req, res) => {
     var user = await User.findOne({ email: req.user.email }).select("+_id");
-    req.deal.shop = shop.id;
-    req.deal.profileVideo = req.profileVideo;
-    req.deal.profilePicture = req.profilePicture;
+    console.log(req.body);
+    console.log(req.profilePicture);
+
     var shop = await Shop.findOne({ owner: user.id }).select("+_id");
+    req.shop = shop.id;
+    req.body.profileVideo = req.profileVideo;
+    req.body.profilePicture = req.profilePicture;
     if (req.profileVideo !== undefined || req.profilePicture !== undefined) {
-      var deal = new Deal(req.deal);
+      var deal = new Deal(req.body);
       try {
         var result = Deal.save();
-        res.staus(200).send(result);
+        return res.staus(200).send(result);
       } catch (error) {
-        res.status(400).send({ message: error.message });
+        return res.status(400).send({ message: error.message });
       }
-    } else res.staus(200);
+    } else {
+      return res.status(200).send();
+    }
   }
 );
 module.exports = router;

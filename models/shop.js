@@ -98,6 +98,7 @@ const shopSchema = mongoose.Schema({
     colorIndex: { type: Number, default: 0 },
     selectProfile: { type: Boolean, default: false },
   },
+  defaultBanner: { type: Boolean, default: true },
   updatedDate: {
     type: Date,
     default: Date.now,
