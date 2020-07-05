@@ -211,6 +211,9 @@ router.put(
               telephones: newShop.telephones,
               website: newShop.website,
               district: newShop.district,
+              businessEmail: newShop.businessEmail,
+              facebook: newShop.facebook,
+              website: newShop.website,
             },
           },
           { new: true }
@@ -227,6 +230,9 @@ router.put(
               telephones: newShop.telephones,
               website: newShop.website,
               district: newShop.district,
+              businessEmail: newShop.businessEmail,
+              facebook: newShop.facebook,
+              website: newShop.website,
             },
           },
           { new: true }
@@ -250,7 +256,7 @@ router.put(
 );
 
 router.put(
-  "/myshop/banner",
+  "/myshop/bannerprofile",
   authorization,
   upload.fields([
     { name: "profilePicture", maxCount: 2 },
@@ -262,22 +268,7 @@ router.put(
     console.log(req.profilePicture);
     var date = Date.now();
     try {
-      if (req.profilePicture != undefined && req.profileVideo != undefined) {
-        var shop = await Shop.findOneAndUpdate(
-          { owner: user.id },
-          {
-            $set: {
-              "banner.selectProfile": newShop.selectProfile,
-              profilePicture: req.profilePicture,
-              profileVideo: req.profileVideo,
-            },
-          },
-          { new: true }
-        ).populate("category");
-      } else if (
-        req.profilePicture == undefined &&
-        req.profileVideo != undefined
-      ) {
+      if (req.profilePicture == undefined && req.profileVideo != undefined) {
         var shop = await Shop.findOneAndUpdate(
           { owner: user.id },
           {
@@ -363,5 +354,9 @@ router.put(
     }
   }
 );
+router.put("/myshop/banner", authorization, async (req, res) => {
+  var user = await User.findOne({ email: req.user.email }).select("+_id");
+  var shop = await Shop.findOneAndUpdate({ owner: user.id }, {});
+});
 
 module.exports = router;

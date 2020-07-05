@@ -64,13 +64,18 @@ router.delete("/:catId", authorization,async (req, res) => {
     let alreadcategory = await Category.findOne({ _id: req.params.catId });
     if (alreadcategory != null) {
       try {
-        var result = await Category.findByIdAndUpdate(req.params.catId,{name: req.body.name,icon: req.upload});
-        try{
-          fs.unlinkSync(appDir +alreadcategory.icon);
-          }
-          catch(e){
-            console.log(e);
-          }
+        var result = await Category.findByIdAndUpdate(req.params.catId,{name: req.body.name,icon: req.upload||alreadcategory.icon});
+        console.log(`${req.upload} upload`);
+        if(req.upload==null){
+          try{
+          
+            fs.unlinkSync(appDir +alreadcategory.icon);
+            }
+            catch(e){
+              console.log(e);
+            }
+        }
+       
         res.status(201).send(await Category.findById(req.params.catId));
       } catch (e) {
         res.status(400).send(e);
